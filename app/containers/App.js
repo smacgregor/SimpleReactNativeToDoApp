@@ -4,18 +4,15 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
 import { actionCreators } from '../redux/todoRedux'
+
 import Title from '../components/Title'
+import Footer from '../components/Footer'
 import Input from '../components/Input'
 import List from '../components/List'
-import Footer from '../components/Footer'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: 'whitesmoke',
   },
 })
 
@@ -30,44 +27,40 @@ class App extends Component {
     dispatch: PropTypes.func.isRequired,
   }
 
-  addItem = (item) => {
+  onSubmitNewToDo = (toDoItem) => {
     const {dispatch} = this.props
-    dispatch(actionCreators.addItem(item))
+    dispatch(actionCreators.add(toDoItem))
   }
 
-  removeItem = (index) => {
+  onRemoveToDo = (toDoItem) => {
     const {dispatch} = this.props
-    dispatch(actionCreators.removeItem(index))
+    dispatch(actionCreators.remove(toDoItem))
   }
 
-  toggleItemCompleted = (index) => {
+  onCompleteToDo = (toDoItem) => {
     const {dispatch} = this.props
-    dispatch(actionCreators.toggleItemCompleted(index))
+    dispatch(actionCreators.toggle(toDoItem))
   }
 
-  removeCompleted = () => {
+  onRemoveCompletedItems = () => {
     const {dispatch} = this.props
-    dispatch(actionCreators.removeCompleted())
+    dispatch(actionCreators.removeCompletedItems())
+  }
+
+  componentWillReceiveProps(props) {
+
   }
 
   render() {
-    const {items} = this.props
-
     return (
       <View style={styles.container}>
-        <Title> Todo List </Title>
-        <Input
-          placeholder={'Enter an item!'}
-          onSubmit={this.addItem}
-        />
-        <View style={styles.divider}/>
-        <List
-          items={items}
-          onRemoveItem={this.removeItem}
-          onToggleItemCompleted={this.toggleItemCompleted}
-        />
-        <View style={styles.divider} />
-        <Footer onRemoveCompleted={this.removeCompleted} />
+        <Title label="Todo List"/>
+        <Input onSubmitNewToDo={this.onSubmitNewToDo}/>
+        <List items={this.props.items}
+              onToggleItem={this.onCompleteToDo}
+              onRemoveItem={this.onRemoveToDo}/>
+        <Footer onFooterPressed={this.onRemoveCompletedItems}
+                label="Remove Completed To-Dos"/>
       </View>
     )
   }

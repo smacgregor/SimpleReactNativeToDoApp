@@ -1,73 +1,67 @@
 import React, { Component, PropTypes } from 'react'
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ListView, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
 import Checkbox from './Checkbox'
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  item: {
-    padding: 15,
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'whitesmoke',
+    height: 35,
+    padding: 5
   },
-  rightSection: {
-    flexDirection: 'row',
+
+  todoText: {
+    fontSize: 15,
+    flex: 1,
+    paddingLeft: 20,
   },
-  removeWrapper: {
-    width: 28,
-  },
-  remove: {
-    position: 'absolute',
-    bottom: -4,
-    left: 5,
-    color: '#CD5C5C',
-    fontSize: 26,
-  },
-  completed: {
-    backgroundColor: 'whitesmoke',
-  },
+
+  closeButton: {
+    marginTop: -8,
+    fontSize: 30,
+    color: 'red',
+    paddingLeft: 10,
+    paddingRight: 20,
+    paddingBottom: 40,
+  }
 })
+
+const rowHasChanged = (r1, r2) => r1 !== r2
+
+// Datasource template
+const ds = new ListView.DataSource({rowHasChanged})
 
 export default class List extends Component {
 
-  static propTypes = {
-    items: PropTypes.array.isRequired,
-    onRemoveItem: PropTypes.func.isRequired,
-    onToggleItemCompleted: PropTypes.func.isRequired,
+  state = {
+    dataSource: ds.cloneWithRows(this.props.items)
   }
 
-  renderItem = (item, i) => {
-    const {onToggleItemCompleted, onRemoveItem} = this.props
-    const itemStyle = item.completed ? [styles.item, styles.completed] : styles.item
+  componentWillReceiveProps(props) {
+    this.setState({dataSource: this.state.dataSource.cloneWithRows(props.items)})
+  }
 
+  renderRow = (rowData) => {
+    const {onToggleItem, onRemoveItem} = this.props
     return (
-      <View key={i} style={itemStyle}>
-        <Text> {item.label} </Text>
-        <View style={styles.rightSection}>
-          <Checkbox
-            isChecked={item.completed}
-            onToggle={() => onToggleItemCompleted(i)}
-          />
-          <TouchableOpacity style={styles.removeWrapper} onPress={() => onRemoveItem(i)}>
-            <Text style={styles.remove}> &times; </Text>
+        <View style={styles.row}>
+          <Text style={styles.todoText}>
+            {rowData.label}
+          </Text>
+          <Checkbox checked={rowData.completed} onToggle={() => onToggleItem(rowData)}></Checkbox>
+          <TouchableOpacity onPress={() => onRemoveItem(rowData)}>
+            <Text style={styles.closeButton}>&times;</Text>
           </TouchableOpacity>
-        </View>
       </View>
     )
   }
 
   render() {
-    const {items} = this.props
-
     return (
-      <ScrollView style={styles.container}>
-        {items.map(this.renderItem)}
-      </ScrollView>
+      <ListView style={styles.container}
+        dataSource={this.state.dataSource}
+        renderRow={this.renderRow}/>
     )
   }
 }

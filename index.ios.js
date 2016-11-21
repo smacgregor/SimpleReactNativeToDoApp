@@ -1,4 +1,13 @@
 import App from './app'
-import { AppRegistry } from 'react-native'
+import React, { Component } from 'react';
+
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Image
+} from 'react-native';
+
 
 AppRegistry.registerComponent('TodoList', () => App)

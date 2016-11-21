@@ -2,34 +2,28 @@ import React, { Component, PropTypes } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 const styles = StyleSheet.create({
-  box: {
-    height: 20,
-    width: 20,
+  checkbox: {
     borderWidth: 2,
-    borderColor: 'black',
+    height: 15,
+    width: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  inner: {
-    flex: 1,
-    margin: 2,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-  },
+
+  checked: {
+    height: 10,
+    width: 10,
+    backgroundColor: 'lightgreen',
+  }
 })
 
 export default class Checkbox extends Component {
 
-  static propTypes = {
-    onToggle: PropTypes.func,
-    isChecked: PropTypes.bool,
-  }
-
   render() {
-    const {onToggle, isChecked} = this.props
-
+    const {onToggle, checked} = this.props
     return (
-      <TouchableOpacity onPress={onToggle}>
-        <View style={styles.box}>
-          { isChecked && <View style={styles.inner}/> }
-        </View>
+      <TouchableOpacity style={styles.checkbox} onPress={onToggle}>
+        <View style={checked && styles.checked}/>
       </TouchableOpacity>
     )
   }

@@ -1,28 +1,35 @@
 import React, { Component, PropTypes } from 'react'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { TouchableHighlight, TouchableOpacity, Text, StyleSheet, View } from 'react-native'
 
 const styles = StyleSheet.create({
-  footer: {
-    paddingVertical: 15,
-    alignItems: 'center',
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
-  remove: {
-    color: '#CD5C5C',
+  text: {
+    backgroundColor: 'whitesmoke',
+    color: 'red',
+    fontSize: 16,
+    padding: 10,
+    flex: 1,
+    textAlign: 'center',
   },
 })
 
 export default class Footer extends Component {
-
-  static propTypes = {
-    onRemoveCompleted: PropTypes.func,
+  _onPressButton() {
+    console.log('Button tapped!')
   }
 
   render() {
-    const {onRemoveCompleted} = this.props
-
+    const {onFooterPressed} = this.props
+    const {label} = this.props
     return (
-      <TouchableOpacity style={styles.footer} onPress={onRemoveCompleted}>
-        <Text style={styles.remove}>Remove completed items</Text>
+      <TouchableOpacity onPress={onFooterPressed} style={styles.container}>
+        <Text style={styles.text}>
+          {label}
+        </Text>
       </TouchableOpacity>
     )
   }
